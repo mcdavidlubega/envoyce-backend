@@ -1,14 +1,6 @@
-import express from 'express';
-import indexRoute from '@routes/index.route';
-const app = express();
+import app from './app'
 
 const {PORT} = process.env || 3000
-
-app.get('/', (req, res) => {
-  res.json({ message: 'hello world!' });
-});
-
-app.use('/', indexRoute);
 
 app.listen(PORT, () => {
   console.log(`...listening on port ${PORT}`);
