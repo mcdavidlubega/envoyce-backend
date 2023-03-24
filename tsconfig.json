@@ -10,11 +10,13 @@
       "@routes/*":["./src/routes/*"],
       "@controllers/*":["./src/controllers/*"],
       "@middleware/*":["./src/middleware/*"],
+      "@utils/*":["./src/utils/*"],
     },
     "typeRoots": ["./node_modules/@types", "./src/@types"],
     "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
     "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
     "strict": true,                     /* Skip type checking .d.ts files that are included with TypeScript. */
+    "lib":["esnext"],
     "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
     "strictNullChecks": true
   },
