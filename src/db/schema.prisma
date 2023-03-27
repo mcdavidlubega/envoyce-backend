@@ -17,6 +17,7 @@ model Users {
   role     Role       @default(USER)
   invoices Invoices[]
   profile  Profile?
+  password String
 }
 
 model Invoices {
