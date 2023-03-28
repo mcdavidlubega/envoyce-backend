@@ -1,16 +1,18 @@
 import { PrismaClient } from "@prisma/client";
 import { error } from "console";
+import argon from 'argon2'
 
 const prisma = new PrismaClient();
-
 async function main(){
     const mark = await prisma.users.upsert({
         where:{email:'mark@email.com'},
-        update:{},
+        update:{
+            
+        },
         create:{
             email:'mark@email.com',
-            name:'Mark David',
-            password:'secretpassword',
+            username:'Mark David',
+            password: await argon.hash('secretpassword'),
             profile:{
                 create:{
                     bio:'The chillest one of them all.'
@@ -62,8 +64,8 @@ async function main(){
         update:{},
         create:{
             email:'timo@email.com',
-            name:'Timothy Ssali',
-            password:'secretpassword',
+            username:'Timothy Ssali',
+            password: await argon.hash('secretpassword'),
             profile:{
                 create:{
                     bio:'The coolest one of them all.'
@@ -110,8 +112,8 @@ async function main(){
         update:{},
         create:{
             email:'isaac@email.com',
-            name:'Isaac Mukasa',
-            password:'secretpassword',
+            username:'Isaac Mukasa',
+            password: await argon.hash('secretpassword'),
             profile:{
                 create:{
                     bio:'The wisest one of them all.'
