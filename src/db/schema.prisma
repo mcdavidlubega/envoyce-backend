@@ -11,18 +11,19 @@ datasource db {
 }
 
 model Users {
-  id       String     @id @default(uuid())
-  email    String     @unique
-  name     String?
-  role     Role       @default(USER)
-  invoices Invoices[]
-  profile  Profile?
-  password String
+  id        String     @id @default(uuid())
+  email     String     @unique
+  username  String?
+  role      Role       @default(USER)
+  invoices  Invoices[]
+  profile   Profile?
+  password  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Invoices {
   id        String     @id @default(uuid())
-  createdAt DateTime   @default(now())
   title     String
   status    Status     @default(PENDING)
   author    Users      @relation(fields: [authorId], references: [id])
@@ -31,22 +32,28 @@ model Invoices {
   clientId  String
   items     Services[]
   terms     String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Profile {
-  id     String @id @default(uuid())
-  bio    String
-  user   Users  @relation(fields: [userId], references: [id])
-  userId String @unique
+  id        String   @id @default(uuid())
+  bio       String
+  user      Users    @relation(fields: [userId], references: [id])
+  userId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Clients {
-  id       String     @id @default(uuid())
-  email    String     @unique
-  name     String
-  address  String
-  tel      String
-  invoices Invoices[]
+  id        String     @id @default(uuid())
+  email     String     @unique
+  name      String
+  address   String
+  tel       String
+  invoices  Invoices[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Services {
@@ -56,6 +63,8 @@ model Services {
   unit_cost   Int
   invoice     Invoices @relation(fields: [invoiceId], references: [id])
   invoiceId   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 enum Role {
