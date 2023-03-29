@@ -23,17 +23,29 @@ model Users {
 }
 
 model Invoices {
-  id        String     @id @default(uuid())
-  title     String
-  status    Status     @default(PENDING)
-  author    Users      @relation(fields: [authorId], references: [id])
-  authorId  String
-  client    Clients    @relation(fields: [clientId], references: [id])
-  clientId  String
-  items     Services[]
-  terms     String
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id             String     @id @default(uuid())
+  invoiceNumber  Int        @default(autoincrement())
+  status         Status     @default(PENDING)
+  author         Users      @relation(fields: [authorId], references: [id])
+  authorId       String
+  client         Clients    @relation(fields: [clientId], references: [id])
+  clientId       String
+  items          Services[]
+  terms          String?
+  paymentDetails String?
+  dueDate        DateTime?
+  currency       Currency   @default(UGX)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  Addons         Addons[]
+}
+
+model Addons {
+  id         String    @id @default(uuid())
+  name       String
+  type       AddOnType
+  invoice    Invoices  @relation(fields: [invoicesId], references: [id])
+  invoicesId String
 }
 
 model Profile {
@@ -58,7 +70,8 @@ model Clients {
 
 model Services {
   id          String   @id @default(uuid())
-  description String
+  name        String
+  description String?
   quantity    Int
   unit_cost   Int
   invoice     Invoices @relation(fields: [invoiceId], references: [id])
@@ -77,4 +90,19 @@ enum Status {
   PAID
   OVERDUE
   ON_HOLD
+}
+
+enum AddOnType {
+  TAX
+  DISCOUNT
+}
+
+enum Currency {
+  UGX
+  USD
+  KSX
+  GBP
+  EUR
+  RMB
+  RWF
 }
