@@ -28,7 +28,7 @@ model Invoices {
   status         Status     @default(PENDING)
   author         Users      @relation(fields: [authorId], references: [id])
   authorId       String
-  client         Clients    @relation(fields: [clientId], references: [id])
+  client         Clients    @relation(fields: [clientId], references: [id], onDelete: Cascade)
   clientId       String
   items          Services[]
   terms          String?
@@ -44,7 +44,8 @@ model Addons {
   id         String    @id @default(uuid())
   name       String
   type       AddOnType
-  invoice    Invoices  @relation(fields: [invoicesId], references: [id])
+  amount     Int
+  invoice    Invoices  @relation(fields: [invoicesId], references: [id], onDelete: Cascade)
   invoicesId String
 }
 
@@ -74,7 +75,7 @@ model Services {
   description String?
   quantity    Int
   unit_cost   Int
-  invoice     Invoices @relation(fields: [invoiceId], references: [id])
+  invoice     Invoices @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
   invoiceId   String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -86,6 +87,7 @@ enum Role {
 }
 
 enum Status {
+  QUOTE
   PENDING
   PAID
   OVERDUE

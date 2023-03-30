@@ -22,6 +22,7 @@ export const isAuthenticated = async (
   try {
     const verified = jwt.verify(token, TOKEN_SECRET as string);
     req.user = verified as Users;
+
     next();
   } catch (err) {
     return res.status(400).send('Invalid Token');

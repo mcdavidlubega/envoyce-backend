@@ -68,7 +68,7 @@ const updateClient = async (req: Request, res: Response): Promise<void> => {
   return;
 };
 
-const deleteClient = async (req: Request, res: Response) => {
+const deleteClient = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   const clientExists = await db.clients.findUnique({ where: { id } });
   if (!clientExists) res.status(401).json({ message: 'Client not found' });
