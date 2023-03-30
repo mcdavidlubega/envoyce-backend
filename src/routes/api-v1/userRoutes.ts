@@ -2,7 +2,6 @@ import { Router } from 'express';
 import controller from '@controllers/Users';
 import asyncMiddleware from '@middleware/asyncHandler';
 import { isAuthenticated } from '@middleware/isAuthenticated';
-import { Schemas, ValidateSchema } from '@middleware/ValidateSchems';
 const router = Router();
 
 router.get('/users', asyncMiddleware(controller.getAllUsers));
