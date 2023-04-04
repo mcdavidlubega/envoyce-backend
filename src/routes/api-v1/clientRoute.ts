@@ -31,9 +31,10 @@ router.delete(
   isAuthenticated,
   asyncMiddleware(controller.deleteClient)
 );
-router.get(
-  '/client-invoices/:id',
+router.post(
+  '/clients/search',
   isAuthenticated,
-  asyncMiddleware(controller.getAClient)
+  asyncMiddleware(controller.searchClient)
 );
+
 export default router;

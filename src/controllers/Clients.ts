@@ -1,6 +1,7 @@
 import { db } from '@utils/dbconnection';
 import { Request, Response } from 'express';
-import { Users } from '@prisma/client';
+import { Clients } from '@prisma/client';
+import { nameQuery } from 'src/types/typings';
 
 const getAllClients = async (req: Request, res: Response): Promise<void> => {
   const clients = await db.clients.findMany();
@@ -82,10 +83,27 @@ const deleteClient = async (req: Request, res: Response): Promise<void> => {
   return;
 };
 
+const searchClient = async (req: Request, res: Response): Promise<void> => {
+  const { name } = (<nameQuery>req.query) as Clients;
+  if (name) {
+    const nameSearch = await db.clients.findMany({
+      where: {
+        name: {
+          search: name,
+          mode: 'insensitive',
+        },
+      },
+    });
+
+    if (!nameSearch) res.status(404).json({ message: 'Client not found' });
+    res.status(200).json(nameSearch);
+  }
+};
 export default {
   getAllClients,
   getAClient,
   createAClient,
   updateClient,
   deleteClient,
+  searchClient,
 };

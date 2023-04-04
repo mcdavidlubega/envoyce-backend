@@ -3,3 +3,4 @@ build
 coverage
 .env
 config/dev.env
+.github

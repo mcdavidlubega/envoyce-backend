@@ -2,9 +2,20 @@ import { db } from '@utils/dbconnection';
 import { Request, Response } from 'express';
 import argon2 from 'argon2';
 import { Users } from '@prisma/client';
+import { nameQuery } from 'src/types/typings';
+import { omitDeep } from 'lodash-omitdeep';
 
 const getAllUsers = async (req: Request, res: Response): Promise<void> => {
-  const users = await db.users.findMany();
+  const users = await db.users.findMany({
+    select: {
+      id: true,
+      email: true,
+      username: true,
+      role: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
   if (!users) res.json(404).json({ message: 'No users found' });
   res.status(200).json(users);
   return;
@@ -15,6 +26,14 @@ const getAUser = async (req: Request, res: Response): Promise<void> => {
   const user = await db.users.findUnique({
     where: {
       id,
+    },
+    select: {
+      id: true,
+      email: true,
+      username: true,
+      role: true,
+      createdAt: true,
+      updatedAt: true,
     },
   });
 
@@ -40,9 +59,9 @@ const createUser = async (req: Request, res: Response): Promise<void> => {
   });
 
   if (isAdmin?.role !== 'ADMIN')
-    res.status(404).json({ message: 'Not authorized' });
+    res.status(401).json({ message: 'Not authorized' });
 
-  if (user) res.status(401).json({ message: 'User already exists' });
+  if (user) res.status(400).json({ message: 'User already exists' });
 
   const hashedPassword = await argon2.hash(password);
   const newuser = await db.users.create({
@@ -52,7 +71,7 @@ const createUser = async (req: Request, res: Response): Promise<void> => {
       password: hashedPassword,
     },
   });
-  res.status(201).json(newuser);
+  res.status(201).json(omitDeep(newuser, 'password'));
   return;
 };
 
@@ -90,7 +109,8 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
     },
     data,
   });
-  res.status(201).json(updatedUser);
+
+  res.status(200).json(omitDeep(updatedUser, 'password'));
   return;
 };
 
@@ -104,7 +124,7 @@ const updateUserRole = async (req: Request, res: Response): Promise<void> => {
   });
 
   if (isAdmin?.role !== 'ADMIN')
-    res.status(404).json({ message: 'Not authorized' });
+    res.status(401).json({ message: 'Not authorized' });
 
   const userExists = await db.users.findUnique({ where: { id } });
   if (userExists) res.status(404).json({ message: 'User not found' });
@@ -117,7 +137,7 @@ const updateUserRole = async (req: Request, res: Response): Promise<void> => {
       role,
     },
   });
-  res.status(201).json(updatedUserRole);
+  res.status(200).json(omitDeep(updatedUserRole, 'password'));
   return;
 };
 
@@ -136,6 +156,23 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
   res.status(200).json({ message: 'user deleted' });
   return;
 };
+
+const searchUser = async (req: Request, res: Response): Promise<void> => {
+  const { username } = (<nameQuery>req.query) as Users;
+  if (username) {
+    const nameSearch = await db.clients.findMany({
+      where: {
+        name: {
+          search: username,
+          mode: 'insensitive',
+        },
+      },
+    });
+
+    if (!nameSearch) res.status(404).json({ message: 'Client not found' });
+    res.status(200).json(nameSearch);
+  }
+};
 export default {
   getAllUsers,
   getAUser,
@@ -143,4 +180,5 @@ export default {
   updateUser,
   updateUserRole,
   deleteUser,
+  searchUser,
 };

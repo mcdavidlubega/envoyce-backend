@@ -57,6 +57,23 @@ async function main() {
                 tel: '256 789 826 6434',
               },
             },
+            Addons: {
+              create: [
+                {
+                  name: 'VAT',
+                  type: 'TAX',
+                  amount: 20,
+                },
+                {
+                  name: 'DISCOUNT',
+                  type: 'DISCOUNT',
+                  amount: 15,
+                },
+              ],
+            },
+            paymentDetails: 'Make payments to the bank',
+            dueDate: '2023-03-29T10:31:57.955Z',
+            currency: 'UGX',
           },
         ],
       },
@@ -108,6 +125,23 @@ async function main() {
                 tel: '256 789 8146 6443',
               },
             },
+            Addons: {
+              create: [
+                {
+                  name: 'VAT',
+                  type: 'TAX',
+                  amount: 16,
+                },
+                {
+                  name: 'DISCOUNT',
+                  type: 'DISCOUNT',
+                  amount: 35,
+                },
+              ],
+            },
+            paymentDetails: 'Make payments to the bank',
+            dueDate: '2023-03-29T10:31:57.955Z',
+            currency: 'UGX',
           },
         ],
       },
@@ -177,6 +211,23 @@ async function main() {
                 tel: '256 789 8146 6443',
               },
             },
+            Addons: {
+              create: [
+                {
+                  name: 'VAT',
+                  type: 'TAX',
+                  amount: 16,
+                },
+                {
+                  name: 'DISCOUNT',
+                  type: 'DISCOUNT',
+                  amount: 50,
+                },
+              ],
+            },
+            paymentDetails: 'Make payments to the bank',
+            dueDate: '2023-03-29T10:31:57.955Z',
+            currency: 'USD',
           },
         ],
       },
