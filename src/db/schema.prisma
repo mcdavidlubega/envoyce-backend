@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -52,7 +53,7 @@ model Addons {
 model Profile {
   id        String   @id @default(uuid())
   bio       String
-  user      Users    @relation(fields: [userId], references: [id])
+  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

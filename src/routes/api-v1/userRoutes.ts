@@ -22,5 +22,10 @@ router.delete(
   isAuthenticated,
   asyncMiddleware(controller.deleteUser)
 );
+router.post(
+  '/users/search',
+  isAuthenticated,
+  asyncMiddleware(controller.searchUser)
+);
 
 export default router;

@@ -1,11 +1,19 @@
 import { db } from '@utils/dbconnection';
 import { Request, Response } from 'express';
+import { omitDeep } from 'lodash-omitdeep';
 
 const getAllInvoices = async (req: Request, res: Response): Promise<void> => {
-  const invoices = await db.invoices.findMany();
-  if (!invoices) res.status(400).json({ mesage: 'no invoices found' });
+  const invoices = await db.invoices.findMany({
+    include: {
+      client: true,
+      items: true,
+      Addons: true,
+      author: true,
+    },
+  });
+  if (!invoices) res.status(404).json({ mesage: 'no invoices found' });
 
-  res.status(200).json(invoices);
+  res.status(200).json(omitDeep(invoices, 'password'));
   return;
 };
 const getInvoice = async (req: Request, res: Response): Promise<void> => {
@@ -14,13 +22,14 @@ const getInvoice = async (req: Request, res: Response): Promise<void> => {
     where: { id },
     include: {
       client: true,
-      author: true,
+      items: true,
       Addons: true,
+      author: true,
     },
   });
   if (!invoice) res.status(404).json({ message: 'Invoice not found' });
 
-  res.status(200).json(invoice);
+  res.status(200).json(omitDeep(invoice, 'password'));
   return;
 };
 
@@ -58,7 +67,7 @@ const createInvoice = async (req: Request, res: Response): Promise<void> => {
     },
   });
 
-  res.status(200).json(newInvoice);
+  res.status(201).json(omitDeep(newInvoice, 'password'));
   return;
 };
 const updateInvoice = async (req: Request, res: Response): Promise<void> => {
@@ -111,7 +120,7 @@ const updateInvoice = async (req: Request, res: Response): Promise<void> => {
     },
   });
 
-  res.status(200).json(updatedInvoice);
+  res.status(200).json(omitDeep(updatedInvoice, 'password'));
   return;
 };
 const deteleteInvoice = async (req: Request, res: Response): Promise<void> => {
@@ -126,7 +135,7 @@ const deteleteInvoice = async (req: Request, res: Response): Promise<void> => {
     where: { id },
   });
 
-  res.status(200).json(deletedInvoice);
+  res.status(200).json(omitDeep(deletedInvoice, 'password'));
 };
 
 const getClientInvoices = async (
@@ -135,7 +144,7 @@ const getClientInvoices = async (
 ): Promise<void> => {
   const { id } = req.params;
   const clientExists = await db.clients.findUnique({ where: { id } });
-  if (!clientExists) res.status(401).json({ message: 'Client not found' });
+  if (!clientExists) res.status(404).json({ message: 'Client not found' });
 
   const clientInvoices = await db.invoices.findMany({
     where: { clientId: id },
@@ -145,7 +154,7 @@ const getClientInvoices = async (
     },
   });
 
-  res.status(200).json(clientInvoices);
+  res.status(200).json(omitDeep(clientInvoices, 'password'));
   return;
 };
 
