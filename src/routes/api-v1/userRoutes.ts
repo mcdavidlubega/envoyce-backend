@@ -4,8 +4,8 @@ import asyncMiddleware from '@middleware/asyncHandler';
 import { isAuthenticated } from '@middleware/isAuthenticated';
 const router = Router();
 
-router.get('/users', asyncMiddleware(controller.getAllUsers));
-router.get('/user/:id', asyncMiddleware(controller.getAUser));
+router.get('/users', isAuthenticated, asyncMiddleware(controller.getAllUsers));
+router.get('/user/:id', isAuthenticated, asyncMiddleware(controller.getAUser));
 router.post('/user/', isAuthenticated, asyncMiddleware(controller.createUser));
 router.put(
   '/user/:id',
@@ -27,5 +27,5 @@ router.post(
   isAuthenticated,
   asyncMiddleware(controller.searchUser)
 );
-
+router.post('/user/signup', asyncMiddleware(controller.signup));
 export default router;

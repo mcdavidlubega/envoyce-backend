@@ -5,6 +5,27 @@ import { Users } from '@prisma/client';
 import { nameQuery } from 'src/types/typings';
 import { omitDeep } from 'lodash-omitdeep';
 
+const signup = async (req: Request, res: Response) => {
+  const { username, email, password } = req.body;
+  const user = await db.users.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (user) return res.status(400).json({ message: 'User already exists' });
+
+  const hashedPassword = await argon2.hash(password);
+  const newuser = await db.users.create({
+    data: {
+      username,
+      email,
+      password: hashedPassword,
+    },
+  });
+  return res.status(201).json(omitDeep(newuser, 'password'));
+};
+
 const getAllUsers = async (req: Request, res: Response): Promise<void> => {
   const users = await db.users.findMany({
     select: {
@@ -174,6 +195,7 @@ const searchUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 export default {
+  signup,
   getAllUsers,
   getAUser,
   createUser,

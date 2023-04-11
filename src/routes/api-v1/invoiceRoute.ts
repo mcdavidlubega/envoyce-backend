@@ -33,5 +33,36 @@ router.delete(
   isAuthenticated,
   asyncMiddleware(controller.deteleteInvoice)
 );
+router.post(
+  '/invoice/:inid/item',
+  isAuthenticated,
+  asyncMiddleware(controller.addItem)
+);
+router.put(
+  '/invoice/:inid/item/:itid',
+  isAuthenticated,
+  asyncMiddleware(controller.editItem)
+);
+router.delete(
+  '/invoice/:inid/item/:itid',
+  isAuthenticated,
+  asyncMiddleware(controller.deleteItem)
+);
+
+router.post(
+  '/invoice/:inid/addon',
+  isAuthenticated,
+  asyncMiddleware(controller.createAddon)
+);
+router.put(
+  '/invoice/:inid/addon/:aoid',
+  isAuthenticated,
+  asyncMiddleware(controller.updateAddon)
+);
+router.delete(
+  '/invoice/:inid/addon/:aoid',
+  isAuthenticated,
+  asyncMiddleware(controller.deleteAddOn)
+);
 
 export default router;
