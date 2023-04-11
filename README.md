@@ -259,7 +259,6 @@ The build code is stored in /build.
 #### Users Features
 - [x] Users Auth
 - [x] Users CRUD
-- [x] Remove user password from returns
 - [ ] Add user logs to track who made changes
 #### Clients Features
 - [x] Create Clients CRUD
