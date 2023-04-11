@@ -27,5 +27,5 @@ router.post(
   isAuthenticated,
   asyncMiddleware(controller.searchUser)
 );
-
+router.post('/user/signup', asyncMiddleware(controller.signup));
 export default router;

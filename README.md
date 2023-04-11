@@ -259,23 +259,23 @@ The build code is stored in /build.
 #### Users Features
 - [x] Users Auth
 - [x] Users CRUD
-- [x] Remove user password from returns
 - [ ] Add user logs to track who made changes
 #### Clients Features
 - [x] Create Clients CRUD
 - [x] Get all invoices for a particular client
-- [ ] Search clients
+- [x] Search clients
 #### Invoices Features
 - [x] Create Invoices CRUD
 - [ ] Users can comment on / anotate invoices
 - [ ] Update past due invoices when they go beyond date due
-- [ ] Add feature to change invoices to quotes
+- [X] Add feature to change invoices to quotes
 - [ ] Search Invoices
-- [ ] Remove Invoice Items
-- [ ] Edit Invoice Items
-- [ ] Remove Addons
-- [ ] Edit Addons
-
+- [x] Remove Invoice Items
+- [x] Edit Invoice Items
+- [x] Remove Addons
+- [x] Edit Addons
+#### Other Features
+- [ ] Implement soft delete for audit purposes
 
 
 ## Author

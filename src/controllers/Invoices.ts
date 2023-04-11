@@ -1,6 +1,8 @@
+import { Services } from '@prisma/client';
 import { db } from '@utils/dbconnection';
 import { Request, Response } from 'express';
 import { omitDeep } from 'lodash-omitdeep';
+import { servicesData } from '../types/typings';
 
 const getAllInvoices = async (req: Request, res: Response): Promise<void> => {
   const invoices = await db.invoices.findMany({
@@ -158,6 +160,135 @@ const getClientInvoices = async (
   return;
 };
 
+const addItem = async (req: Request, res: Response): Promise<void> => {
+  const { inid } = req.params;
+  const { name, description, quantity, unit_cost } = (<servicesData>(
+    req.body
+  )) as Services;
+  const newItem = await db.services.create({
+    data: {
+      name: name,
+      description: description,
+      quantity: quantity,
+      unit_cost: unit_cost,
+      invoiceId: inid,
+    },
+  });
+
+  res.status(201).json(`${newItem} added to invoice ${inid}`);
+  return;
+};
+
+const editItem = async (req: Request, res: Response): Promise<void> => {
+  const { inid, itid } = req.params;
+  const { name, description, quantity, unit_cost } = req.body;
+
+  const invoiceExists = await db.invoices.findFirst({
+    where: { id: inid },
+  });
+
+  if (!invoiceExists) res.status(404).json({ message: 'Invoice not found' });
+
+  const itemExists = await db.services.findFirst({
+    where: { id: itid },
+  });
+  if (!itemExists) res.status(404).json({ message: 'Item not found' });
+
+  const updatedItem = await db.services.update({
+    where: { id: itid },
+    data: {
+      name,
+      description,
+      quantity,
+      unit_cost,
+    },
+  });
+  res.status(200).json(updatedItem);
+  return;
+};
+
+const deleteItem = async (req: Request, res: Response): Promise<void> => {
+  const { inid, itid } = req.params;
+  const invoiceExists = await db.invoices.findFirst({
+    where: { id: inid },
+  });
+
+  if (!invoiceExists) res.status(404).json({ message: 'Invoice not found' });
+
+  const itemExists = await db.services.findFirst({
+    where: { id: itid },
+  });
+  if (!itemExists) res.status(404).json({ message: 'Item not found' });
+
+  const deletedItem = await db.services.delete({
+    where: { id: itid },
+  });
+
+  res.status(200).json(deletedItem);
+  return;
+};
+
+const createAddon = async (req: Request, res: Response): Promise<void> => {
+  const { inid } = req.params;
+  const invoiceExists = await db.invoices.findFirst({ where: { id: inid } });
+  if (!invoiceExists) res.status(404).json({ message: 'Invoice not found' });
+
+  const { name, type, amount } = req.body;
+  const newAddon = await db.addons.create({
+    data: {
+      name,
+      type,
+      amount: Number(amount),
+      invoicesId: inid,
+    },
+  });
+
+  res
+    .status(201)
+    .json({ message: `${amount}% ${type} added to invoince ${inid}` });
+  return;
+};
+
+const updateAddon = async (req: Request, res: Response): Promise<void> => {
+  const { inid, aoid } = req.params;
+  const invoiceExists = await db.invoices.findFirst({ where: { id: inid } });
+  if (!invoiceExists)
+    res.sendStatus(404).json({ message: 'Invoice not found' });
+  const addOnExists = await db.addons.findFirst({ where: { id: aoid } });
+  if (!aoid) res.status(404).json({ message: 'Addon not found' });
+
+  const { name, type, amount } = req.body;
+
+  const updatedOn = await db.addons.update({
+    where: { id: aoid },
+    data: {
+      name,
+      type,
+      amount: Number(amount),
+      invoicesId: inid,
+    },
+  });
+  res
+    .status(200)
+    .json({ message: ` ${type} on invoince ${inid} updated to ${amount}%` });
+  return;
+};
+
+const deleteAddOn = async (req: Request, res: Response): Promise<void> => {
+  const { inid, aoid } = req.params;
+  const invoiceExists = await db.invoices.findFirst({ where: { id: inid } });
+  if (!invoiceExists) res.status(404).json({ message: 'Invoice not found' });
+  const addOnExists = await db.addons.findFirst({ where: { id: aoid } });
+  if (!addOnExists) res.status(404).json({ message: 'Addon not found' });
+
+  const deletedAddon = await db.addons.delete({
+    where: { id: aoid },
+  });
+  res.status(200).json({
+    message: ` ${addOnExists?.type} was removed from invoice ${inid}`,
+  });
+  return;
+};
 export default {
   getAllInvoices,
   getInvoice,
@@ -165,4 +296,10 @@ export default {
   updateInvoice,
   deteleteInvoice,
   getClientInvoices,
+  addItem,
+  editItem,
+  deleteItem,
+  createAddon,
+  updateAddon,
+  deleteAddOn,
 };

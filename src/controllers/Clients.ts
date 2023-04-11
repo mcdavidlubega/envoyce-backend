@@ -3,6 +3,12 @@ import { Request, Response } from 'express';
 import { Clients } from '@prisma/client';
 import { nameQuery } from 'src/types/typings';
 
+db.$use(async (params, next) => {
+  const results = await next(params);
+  console.log(params.model, params.action, params.args);
+  return results;
+});
+
 const getAllClients = async (req: Request, res: Response): Promise<void> => {
   const clients = await db.clients.findMany();
   res.status(200).json(clients);
