@@ -13,7 +13,7 @@
     "dbreset": "env-cmd -f ./config/dev.env npx prisma migrate reset",
     "studio": "env-cmd -f ./config/dev.env npx prisma studio",
     "seed": "env-cmd -f ./config/dev.env ts-node src/db/seed.ts",
-    "deploydbreset": "npx prisma migrate reset",
+    "deploydbreset": "npx prisma migrate reset --force",
     "deploymigrate": "npx prisma migrate deploy",
     "deployseed": "ts-node src/db/seed.ts"
   },
