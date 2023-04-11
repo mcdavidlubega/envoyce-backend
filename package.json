@@ -8,13 +8,13 @@
     "start": "node build/index.js",
     "dev": "env-cmd -f ./config/dev.env ts-node-dev -r tsconfig-paths/register --respawn --ignore-watch node_modules ./src/index.ts",
     "migrate": "env-cmd -f ./config/dev.env npx prisma migrate dev --name",
-    "migratedeploy": "npx prisma migrate deploy",
+    "migrate:deploy": "npx prisma migrate deploy",
     "migrate:test": "env-cmd -f ./config/test.env npx prisma migrate dev --name test",
     "dbreset": "env-cmd -f ./config/dev.env npx prisma migrate reset",
     "studio": "env-cmd -f ./config/dev.env npx prisma studio",
     "seed": "env-cmd -f ./config/dev.env ts-node src/db/seed.ts",
-    "postgres:start": "docker run --name pg-envoyce -p 5433:5432 -d envoyce-test",
-    "postgres:stop": "docker stop pg-envoyce docker rm pg-envoyce"
+    "deploymigrate": "npx prisma migrate deploy",
+    "deployseed": "ts-node src/db/seed.ts"
   },
   "repository": {
     "type": "git",
