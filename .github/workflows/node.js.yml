@@ -31,7 +31,9 @@ jobs:
           # Maps tcp port 5432 on service container to the host
           - 5432:5432
     env:
-      DB_URL: postgresql://postgres:postgres@localhost:5432/grading-app
+      DB_URL: postgresql://postgres:postgres@localhost:5432/envoyce-one
+      PORT: 5001
+      TOKEN_SECRET: =====randomTokenSecret=====
 
     steps:
       - uses: actions/checkout@v3
