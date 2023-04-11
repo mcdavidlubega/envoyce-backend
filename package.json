@@ -8,7 +8,7 @@
     "start": "node build/index.js",
     "dev": "env-cmd -f ./config/dev.env ts-node-dev -r tsconfig-paths/register --respawn --ignore-watch node_modules ./src/index.ts",
     "migrate": "env-cmd -f ./config/dev.env npx prisma migrate dev --name",
-    "migrate:deploy": "npx prisma migrate deploy",
+    "migratedeploy": "npx prisma migrate deploy",
     "migrate:test": "env-cmd -f ./config/test.env npx prisma migrate dev --name test",
     "dbreset": "env-cmd -f ./config/dev.env npx prisma migrate reset",
     "studio": "env-cmd -f ./config/dev.env npx prisma studio",
